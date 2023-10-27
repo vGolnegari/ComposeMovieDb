@@ -24,6 +24,10 @@ minSdk = "24"
 compileSdk = "33"
 targetSdk = "33"
 androidxWindowManager = "1.0.0"
+junit = "4.13.2"
+androidx-test-ext-junit = "1.1.5"
+espresso-core = "3.5.1"
+testing_Junit_Ext = "1.1.5"
 
 
 [libraries]
@@ -62,6 +66,11 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 coil-kt = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 coil-kt-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 coil-kt-svg = { group = "io.coil-kt", name = "coil-svg", version.ref = "coil" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
+testing-junit = { group = "junit", name = "junit", version.ref = "junit" }
+testing-junit-ext = { group = "androidx.test.ext", name = "junit", version.ref = "testing_Junit_Ext" }
 
 
 

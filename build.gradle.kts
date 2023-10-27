@@ -10,3 +10,19 @@ plugins {
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.kotlin.kapt) apply false
 }
+
+allprojects {
+    plugins.withType<com.android.build.gradle.BasePlugin>().configureEach {
+        extensions.configure<com.android.build.gradle.BaseExtension> {
+            compileSdkVersion(libs.versions.compileSdk.get().toInt())
+            defaultConfig {
+                minSdk = libs.versions.minSdk.get().toInt()
+                targetSdk = libs.versions.targetSdk.get().toInt()
+            }
+            compileOptions {
+                sourceCompatibility = JavaVersion.VERSION_17
+                targetCompatibility = JavaVersion.VERSION_17
+            }
+        }
+    }
+}

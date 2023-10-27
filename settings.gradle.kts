@@ -15,4 +15,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "ComposeMovie"
 include(":app")
- 
+include(":core")
+include(":core:domain")
+include(":core:network")
+include(":core:repository")
