@@ -4,9 +4,12 @@ import com.golnegari.core.domain.base.DataResult
 import com.golnegari.core.domain.base.DataResultErrorType
 import com.golnegari.core.domain.base.DomainModelList
 import com.golnegari.core.domain.model.Movie
+import com.golnegari.core.domain.model.MovieDetail
 import com.golnegari.core.domain.repository.MovieRepository
 import com.golnegari.core.network.base.ApiResult
 import com.golnegari.core.network.datasource.RemoteMovieDataSource
+import com.golnegari.core.network.model.GenreJsonModel
+import com.golnegari.core.repository.toDomainModel
 import com.golnegari.core.repository.toDomainMovie
 import javax.inject.Inject
 
@@ -17,9 +20,7 @@ class MovieRepositoryImpl @Inject constructor(private val remoteMovieDataSource:
         val movieListApiResult = remoteMovieDataSource.fetchPopularMovieList()
         return if (movieListApiResult is ApiResult.Success) {
             val domainMovieList = DomainModelList<Movie>()
-            val list = movieListApiResult.data.result?.map {it.toDomainMovie()
-
-            } ?: emptyList()
+            val list = movieListApiResult.data.result?.map {it.toDomainMovie() } ?: emptyList()
             if (list.isNotEmpty()) {
                 domainMovieList.addAll(list)
             }
@@ -29,8 +30,12 @@ class MovieRepositoryImpl @Inject constructor(private val remoteMovieDataSource:
         }
     }
 
-    override suspend fun getMovieDetail(movieId: String): DataResult<Movie> {
-        TODO("Not yet implemented")
+    override suspend fun getMovieDetail(movieId: Int): DataResult<MovieDetail> {
+        val movieDetailResult = remoteMovieDataSource.fetchMovieDetail(movieId)
+        return if (movieDetailResult is ApiResult.Success) {
+               DataResult.Success(movieDetailResult.data.toDomainModel())
+        } else {
+            DataResult.Error(type = DataResultErrorType.NETWORK_GENERIC_ERROR)
+        }
     }
-
 }
