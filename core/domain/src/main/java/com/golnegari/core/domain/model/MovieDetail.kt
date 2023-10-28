@@ -4,12 +4,13 @@ import com.golnegari.core.domain.base.BaseDomainModel
 
 data class MovieDetail(
     val id: Int,
-    val backdrop_path: String?,
-    val original_language: String?,
-    val original_title: String?,
+    val backdropPath: String?,
+    val originalLanguage: String?,
+    val originalTitle: String?,
     val overview: String?,
-    val poster_path: String?,
-    val release_date: String?,
-    val vote_average: Double,
-    val vote_count: Int
+    val posterPath: String?,
+    val releaseDate: String?,
+    val voteAverage: Double,
+    val voteCount: Int,
+    val genres : List<Genre>,
 ) : BaseDomainModel

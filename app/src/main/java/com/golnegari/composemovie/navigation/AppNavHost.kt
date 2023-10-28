@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.golnegari.common.base.navigation.NavRoutes
+import com.golnegari.feature.moviedetail.MovieDetailScreen
 import com.golnegari.feature.popularmovies.PopularMoviesScreen
 
 
@@ -19,12 +20,21 @@ fun AppNavHost(
         navController = navController,
         startDestination = NavRoutes.PopularMovieScreenNav.route,
     ) {
-       composable(route = NavRoutes.PopularMovieScreenNav.route, arguments = NavRoutes.PopularMovieScreenNav.arguments) {
-           PopularMoviesScreen(navHostController = navController)
-       }
+        composable(
+            route = NavRoutes.PopularMovieScreenNav.route,
+            arguments = NavRoutes.PopularMovieScreenNav.arguments
+        ) {
+            PopularMoviesScreen(navHostController = navController)
+        }
 
-        composable(route = NavRoutes.MovieDetailNav.route , arguments = NavRoutes.MovieDetailNav.arguments) {
-
+        composable(
+            route = NavRoutes.MovieDetailNav.route,
+            arguments = NavRoutes.MovieDetailNav.arguments
+        ) {
+            MovieDetailScreen(
+                movieId = NavRoutes.MovieDetailNav.getMovieId(it),
+                navHostController = navController
+            )
         }
     }
 }

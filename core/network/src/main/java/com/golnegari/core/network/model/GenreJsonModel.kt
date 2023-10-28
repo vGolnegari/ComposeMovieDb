@@ -6,8 +6,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GenreJsonModel(
-    @SerialName("id")
-    val id: Int,
     @SerialName("name")
-    val name: String
+    val name: String?
 ) : BaseJson

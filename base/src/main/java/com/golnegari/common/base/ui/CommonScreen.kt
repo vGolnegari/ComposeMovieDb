@@ -37,70 +37,66 @@ fun <T : Any, A : UiAction> CommonScreen(
     reset: ((data: T?) -> Unit)? = null,
     content: @Composable (data: T?, snackBarHostState: SnackbarHostState) -> Unit,
 ) {
-    val uriHandler = LocalUriHandler.current
-    val currentContext = LocalContext.current
-    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-        val hostState = remember { SnackbarHostState() }
-        val coroutineScope = rememberCoroutineScope()
-        LaunchedEffect(Unit) {
-            singleEventFlow.collectLatest {
-                if (it is UiState.Navigation) {
-                        navController.enableOnBackPressed(true)
-                        navController.navigate(it.route) {
-                            it.popUpTo?.let { popUpToRoute ->
-                                popUpTo(popUpToRoute) {
-                                    inclusive = it.inclusive
-                                }
-                            }
-                            launchSingleTop = it.singleTop
+    val hostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+    LaunchedEffect(Unit) {
+        singleEventFlow.collectLatest {
+            if (it is UiState.Navigation) {
+                navController.enableOnBackPressed(true)
+                navController.navigate(it.route) {
+                    it.popUpTo?.let { popUpToRoute ->
+                        popUpTo(popUpToRoute) {
+                            inclusive = it.inclusive
                         }
-
+                    }
+                    launchSingleTop = it.singleTop
                 }
+
             }
         }
+    }
 
-        ConstraintLayout {
-            val (contentId, loadingId) = createRefs()
-            Box(
-                modifier = Modifier.Companion
-                    .constrainAs(contentId) {
-                        top.linkTo(parent.top)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        bottom.linkTo(parent.bottom)
-                    }
-            ) {
-                content(
-                    data = uiStateState.value.uiModel,
-                    snackBarHostState = hostState,
-                )
+    ConstraintLayout {
+        val (contentId, loadingId) = createRefs()
+        Box(
+            modifier = Modifier.Companion
+                .constrainAs(contentId) {
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom)
+                }
+        ) {
+            content(
+                data = uiStateState.value.uiModel,
+                snackBarHostState = hostState,
+            )
+        }
+        val value = uiStateState.value
+        if (value is UiState.Loading) {
+            if (value.isCommon) {
+                LoadingBox(loadingId = loadingId)
             }
-            val value = uiStateState.value
-            if (value is UiState.Loading) {
-                if (value.isCommon) {
-                    LoadingBox(loadingId = loadingId)
-                }
-            } else if (value is UiState.ErrorMessage<*, *>) {
-                val snackBarMessage =
-                    value.message.toIntOrNull()?.let { stringResource(it) } ?: value.message
-                val actionLabel = if (value.retriable) {
-                    "Try Again"
-                } else {
-                    null
-                }
-                val actionPerformed =
-                    { value.retryAction?.let { action -> sendAction?.invoke(action as A) } }
-                val actionDismissed = {}
-                LaunchedEffect(uiStateState.value) {
-                    coroutineScope.launch {
-                        showSnackBar(
-                            hostState = hostState,
-                            snackBarMessage = snackBarMessage,
-                            actionLabel = actionLabel,
-                            actionPerformed = actionPerformed,
-                            actionDismissed = actionDismissed,
-                        )
-                    }
+        } else if (value is UiState.ErrorMessage<*, *>) {
+            val snackBarMessage =
+                value.message.toIntOrNull()?.let { stringResource(it) } ?: value.message
+            val actionLabel = if (value.retriable) {
+                "Try Again"
+            } else {
+                null
+            }
+            val actionPerformed =
+                { value.retryAction?.let { action -> sendAction?.invoke(action as A) } }
+            val actionDismissed = {}
+            LaunchedEffect(uiStateState.value) {
+                coroutineScope.launch {
+                    showSnackBar(
+                        hostState = hostState,
+                        snackBarMessage = snackBarMessage,
+                        actionLabel = actionLabel,
+                        actionPerformed = actionPerformed,
+                        actionDismissed = actionDismissed,
+                    )
                 }
             }
         }
@@ -122,6 +118,7 @@ private suspend fun showSnackBar(
         SnackbarResult.ActionPerformed -> {
             actionPerformed()
         }
+
         SnackbarResult.Dismissed -> {
             actionDismissed()
         }

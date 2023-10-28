@@ -56,6 +56,7 @@ dependencies {
     implementation(project(":core:repository"))
     implementation(project(":base"))
     implementation(project(":feature:popularmovies"))
+    implementation(project(":feature:movie-detail"))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle.runtime)
