@@ -10,14 +10,19 @@ import com.golnegari.core.network.util.NetworkConnectionUtil
 import com.golnegari.core.network.retrofit.apiServices.MovieApiService
 import javax.inject.Inject
 
-class RemoteMovieDataSourceImpl @Inject constructor(private val networkConnectionUtil: NetworkConnectionUtil,private val movieApiService: MovieApiService) :
+class RemoteMovieDataSourceImpl @Inject constructor(
+    private val networkConnectionUtil: NetworkConnectionUtil,
+    private val movieApiService: MovieApiService
+) :
     RemoteMovieDataSource {
 
-    override suspend fun fetchPopularMovieList() : ApiResult<MovieListJson>{
-        return suspend { movieApiService.getPopularMovies(1) }.getApiResult(networkConnectionUtil)
+    override suspend fun fetchPopularMovieList(page: Int): MovieListJson {
+        return movieApiService.getPopularMovies(page)
     }
 
     override suspend fun fetchMovieDetail(movieId: Int): ApiResult<MovieDetailJsonModel> {
-        return suspend { movieApiService.getMovieDetailInfo(movieId) }.getApiResult(networkConnectionUtil)
+        return suspend { movieApiService.getMovieDetailInfo(movieId) }.getApiResult(
+            networkConnectionUtil
+        )
     }
 }

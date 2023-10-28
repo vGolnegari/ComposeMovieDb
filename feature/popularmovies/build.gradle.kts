@@ -23,6 +23,7 @@ dependencies {
     implementation(project(":base"))
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.feature.compose)
+    implementation(libs.composePaging)
     testImplementation(libs.testing.junit)
     androidTestImplementation(libs.testing.junit.ext)
     kapt(libs.hilt.compiler)

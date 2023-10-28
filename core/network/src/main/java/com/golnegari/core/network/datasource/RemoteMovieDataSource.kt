@@ -7,6 +7,6 @@ import com.golnegari.core.network.model.MovieListJson
 
 
 interface RemoteMovieDataSource {
-    suspend fun fetchPopularMovieList() : ApiResult<MovieListJson>
+    suspend fun fetchPopularMovieList(page : Int) : MovieListJson
     suspend fun fetchMovieDetail(movieId : Int) : ApiResult<MovieDetailJsonModel>
 }

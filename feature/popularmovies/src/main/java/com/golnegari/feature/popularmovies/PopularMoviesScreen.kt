@@ -11,6 +11,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
@@ -37,6 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.golnegari.common.base.ui.CommonScreen
 import com.golnegari.core.domain.model.Movie
@@ -69,19 +74,28 @@ fun PopularMoviesScreen(
                 }
             }, colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.DarkGray))
         }) { paddingValues ->
-            LazyVerticalStaggeredGrid(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(8.dp),
-                columns = StaggeredGridCells.Fixed(count = 3),
-                verticalItemSpacing = 4.dp,
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                items(data?.movies ?: emptyList()) { item ->
-                    MovieItemContent(info = item, onMovieCLicked = { id ->
-                        viewModel.sendAction(action = PopularMoviesAction.OnGotoMovieDetail(movieId = id))
-                    })
+            data?.let {
+                val movies = data.pageableMovies.collectAsLazyPagingItems()
+                LazyVerticalStaggeredGrid(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .padding(8.dp),
+                    columns = StaggeredGridCells.Fixed(count = 3),
+                    verticalItemSpacing = 4.dp,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
+                    items(movies.itemCount) { index ->
+                        movies[index]?.let { movie ->
+                            MovieItemContent(info = movie, onMovieCLicked = { id ->
+                                viewModel.sendAction(
+                                    action = PopularMoviesAction.OnGotoMovieDetail(
+                                        movieId = id
+                                    )
+                                )
+                            })
+                        }
+                    }
                 }
             }
         }

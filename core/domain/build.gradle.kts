@@ -13,6 +13,7 @@ android {
 dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+    implementation(libs.pagingRuntime)
     kapt(libs.hilt.ext.compiler)
     testImplementation(libs.testing.junit)
     androidTestImplementation(libs.testing.junit.ext)

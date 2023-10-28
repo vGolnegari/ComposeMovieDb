@@ -13,6 +13,7 @@ android {
 dependencies {
     implementation(project(":core:network"))
     implementation(project(":core:domain"))
+    implementation(libs.pagingRuntime)
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     kapt(libs.hilt.ext.compiler)

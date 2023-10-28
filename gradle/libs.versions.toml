@@ -29,6 +29,8 @@ androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
 testing_Junit_Ext = "1.1.5"
 composeConstraintLayout = "1.0.1"
+pagingVersion = "3.1.1"
+composePaginng = "1.0.0-alpha17"
 
 
 [libraries]
@@ -73,6 +75,8 @@ espresso-core = { group = "androidx.test.espresso", name = "espresso-core", vers
 testing-junit = { group = "junit", name = "junit", version.ref = "junit" }
 testing-junit-ext = { group = "androidx.test.ext", name = "junit", version.ref = "testing_Junit_Ext" }
 constraintLayout = {group = "androidx.constraintlayout" , name = "constraintlayout-compose" , version.ref = "composeConstraintLayout"}
+pagingRuntime = {group = "androidx.paging" , name  = "paging-runtime" , version.ref = "pagingVersion"}
+composePaging = {group = "androidx.paging", name = "paging-compose" , version.ref = "composePaginng"}
 
 
 
