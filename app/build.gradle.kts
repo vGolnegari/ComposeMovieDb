@@ -54,6 +54,8 @@ dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation(project(":core:network"))
     implementation(project(":core:repository"))
+    implementation(project(":base"))
+    implementation(project(":feature:popularmovies"))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle.runtime)

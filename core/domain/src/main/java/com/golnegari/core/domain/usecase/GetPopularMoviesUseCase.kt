@@ -8,9 +8,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class GetPopularMovies @Inject constructor(private val movieRepository: MovieRepository) {
+class GetPopularMoviesUseCase @Inject constructor(private val movieRepository: MovieRepository) {
 
-    suspend operator fun invoke() : Flow<DataResult<DomainModelList<Movie>>> = flow {
+    operator fun invoke() : Flow<DataResult<DomainModelList<Movie>>> = flow {
         emit(DataResult.Loading())
         emit(movieRepository.getPopularMovie())
     }

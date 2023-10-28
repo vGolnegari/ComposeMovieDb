@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MovieJsonModel(
-    @SerialName("id") val id: Int,
+    @SerialName("id") val id: Int?,
     @SerialName("title") val title: String? = null,
     @SerialName("backdrop_path") val backdropPath: String? = null
 ) : BaseJson

@@ -14,7 +14,7 @@ class RemoteMovieDataSourceImpl @Inject constructor(private val networkConnectio
     RemoteMovieDataSource {
 
     override suspend fun fetchPopularMovieList() : ApiResult<MovieListJson>{
-        return suspend { movieApiService.getPopularMovies(0) }.getApiResult(networkConnectionUtil)
+        return suspend { movieApiService.getPopularMovies(1) }.getApiResult(networkConnectionUtil)
     }
 
     override suspend fun fetchMovieDetail(movieId: Int): ApiResult<MovieDetailJsonModel> {

@@ -28,6 +28,7 @@ junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
 testing_Junit_Ext = "1.1.5"
+composeConstraintLayout = "1.0.1"
 
 
 [libraries]
@@ -71,6 +72,7 @@ androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 testing-junit = { group = "junit", name = "junit", version.ref = "junit" }
 testing-junit-ext = { group = "androidx.test.ext", name = "junit", version.ref = "testing_Junit_Ext" }
+constraintLayout = {group = "androidx.constraintlayout" , name = "constraintlayout-compose" , version.ref = "composeConstraintLayout"}
 
 
 
@@ -79,7 +81,7 @@ retrofit = ["retrofit-core", "retrofit-kotlin-serialization", "okhttp-logging", 
 feature-compose = ["hilt-android", "kotlinx-coroutines-android",
     "androidx-lifecycle-viewModelCompose", "androidx-lifecycle-runtimeCompose",
     "androidx-hilt-navigation-compose", "coil-kt",
-    "coil-kt-compose", "androidx-activity-compose","compose-material3","androidx-compose-ui","androidx-compose-ui-tooling"]
+    "coil-kt-compose", "androidx-activity-compose","compose-material3","androidx-compose-ui","androidx-compose-ui-tooling","constraintLayout"]
 
 
 
