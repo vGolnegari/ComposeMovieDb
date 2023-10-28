@@ -1,39 +1,30 @@
 package com.golnegari.feature.moviedetail
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.staggeredgrid.LazyHorizontalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.AssistChip
-import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ElevatedAssistChip
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -41,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -81,7 +73,9 @@ fun MovieDetailScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 data?.movieDetail?.let { movieDetailInfo ->
-                    Header(movieInfo = movieDetailInfo)
+                    Header(movieInfo = movieDetailInfo, onBackPressed = {
+                        navHostController.popBackStack()
+                    })
 
                     Divider(
                         modifier = Modifier
@@ -115,9 +109,9 @@ fun MovieDetailScreen(
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-private fun Header(modifier: Modifier = Modifier, movieInfo: MovieDetail) {
+private fun Header(modifier: Modifier = Modifier, movieInfo: MovieDetail,onBackPressed: () -> Unit) {
     ConstraintLayout(modifier = modifier) {
-        val (headerImage, movieImageRef, movieTitleRef, genreRef) = createRefs()
+        val (headerImage, movieImageRef, movieTitleRef, genreRef, topAppBarRef) = createRefs()
         AsyncImage(
             model = movieInfo.backdropPath,
             contentDescription = "posterPath",
@@ -158,7 +152,8 @@ private fun Header(modifier: Modifier = Modifier, movieInfo: MovieDetail) {
                 })
         }
         if (movieInfo.genres.isNotEmpty()) {
-            LazyHorizontalStaggeredGrid(rows = StaggeredGridCells.Fixed(2),
+            LazyHorizontalStaggeredGrid(
+                rows = StaggeredGridCells.Fixed(2),
                 Modifier
                     .height(80.dp)
                     .constrainAs(genreRef) {
@@ -168,7 +163,10 @@ private fun Header(modifier: Modifier = Modifier, movieInfo: MovieDetail) {
                         bottom.linkTo(parent.bottom)
                         height = Dimension.wrapContent
                         width = Dimension.fillToConstraints
-                    }, horizontalItemSpacing = 6.dp, verticalArrangement = Arrangement.spacedBy(8.dp)){
+                    },
+                horizontalItemSpacing = 6.dp,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 items(movieInfo.genres) { genre ->
                     AssistChip(onClick = {}, label = {
                         Text(text = genre.name, style = TextStyle(fontSize = 12.sp))
@@ -177,6 +175,11 @@ private fun Header(modifier: Modifier = Modifier, movieInfo: MovieDetail) {
                 }
             }
         }
+        AppBar(modifier = Modifier.constrainAs(topAppBarRef){
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+            top.linkTo(parent.top)
+        }, onBackPressed = onBackPressed)
     }
 }
 
@@ -210,8 +213,15 @@ private fun MovieDescriptionContent(modifier: Modifier = Modifier, description: 
 
 @Composable
 private fun MovieRatingContent(modifier: Modifier = Modifier, voteAverage: Double, vote: Int) {
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-        Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Text(
                 text = voteAverage.toString(),
                 textAlign = TextAlign.Center,
@@ -234,9 +244,19 @@ private fun MovieRatingContent(modifier: Modifier = Modifier, voteAverage: Doubl
 
 @Composable
 private fun MovieLanguageContent(modifier: Modifier = Modifier, language: String) {
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-        Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {
-            Image(painter = painterResource(id = R.drawable.ic_language), contentDescription = "langyage")
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_language),
+                contentDescription = "langyage"
+            )
             Text(
                 text = language,
                 textAlign = TextAlign.Center,
@@ -257,9 +277,19 @@ private fun MovieLanguageContent(modifier: Modifier = Modifier, language: String
 
 @Composable
 private fun MovieReleaseContent(modifier: Modifier = Modifier, date: String) {
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-        Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {
-            Image(painter = painterResource(id = R.drawable.ic_release_date), contentDescription = "release_date")
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_release_date),
+                contentDescription = "release_date"
+            )
             Text(
                 text = date,
                 textAlign = TextAlign.Center,
@@ -275,5 +305,51 @@ private fun MovieReleaseContent(modifier: Modifier = Modifier, date: String) {
             textAlign = TextAlign.Center,
             style = TextStyle(fontSize = 12.sp)
         )
+    }
+}
+
+@Composable
+private fun AppBar(modifier: Modifier = Modifier,onBackPressed : () -> Unit) {
+    ConstraintLayout(
+        modifier = modifier
+            .height(56.dp)
+            .fillMaxWidth()
+    ) {
+        val (backRef, shareRef, favoriteRef) = createRefs()
+        IconButton(onClick = { onBackPressed.invoke()}, modifier = Modifier.constrainAs(backRef) {
+            top.linkTo(parent.top)
+            bottom.linkTo(parent.bottom)
+            start.linkTo(parent.start)
+        }) {
+            Image(
+                colorFilter = ColorFilter.tint(color = Color.White),
+                painter = painterResource(id = R.drawable.ic_back),
+                contentDescription = "back"
+            )
+        }
+
+        IconButton(onClick = { }, modifier = Modifier.constrainAs(favoriteRef) {
+            top.linkTo(parent.top)
+            bottom.linkTo(parent.bottom)
+            end.linkTo(parent.end)
+        }) {
+            Image(
+                colorFilter = ColorFilter.tint(color = Color.White),
+                painter = painterResource(id = R.drawable.ic_favorite),
+                contentDescription = "favorite",
+            )
+        }
+
+        IconButton(onClick = { }, modifier = Modifier.constrainAs(shareRef) {
+            top.linkTo(parent.top)
+            bottom.linkTo(parent.bottom)
+            end.linkTo(favoriteRef.start)
+        }) {
+            Image(
+                colorFilter = ColorFilter.tint(color = Color.White),
+                painter = painterResource(id = R.drawable.ic_share),
+                contentDescription = "favorite",
+            )
+        }
     }
 }
