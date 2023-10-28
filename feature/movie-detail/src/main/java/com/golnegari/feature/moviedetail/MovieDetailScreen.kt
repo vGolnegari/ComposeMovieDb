@@ -2,12 +2,14 @@ package com.golnegari.feature.moviedetail
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -155,15 +158,17 @@ private fun Header(modifier: Modifier = Modifier, movieInfo: MovieDetail) {
                 })
         }
         if (movieInfo.genres.isNotEmpty()) {
-            LazyHorizontalStaggeredGrid(rows = StaggeredGridCells.Fixed(2),Modifier.height(80.dp)
-                .constrainAs(genreRef) {
-                    start.linkTo(movieImageRef.end, margin = 12.dp)
-                    end.linkTo(parent.end, margin = 12.dp)
-                    top.linkTo(movieTitleRef.bottom, margin = 8.dp)
-                    bottom.linkTo(parent.bottom)
-                    height = Dimension.wrapContent
-                    width = Dimension.fillToConstraints
-                }, horizontalItemSpacing = 6.dp, verticalArrangement = Arrangement.spacedBy(8.dp)){
+            LazyHorizontalStaggeredGrid(rows = StaggeredGridCells.Fixed(2),
+                Modifier
+                    .height(80.dp)
+                    .constrainAs(genreRef) {
+                        start.linkTo(movieImageRef.end, margin = 12.dp)
+                        end.linkTo(parent.end, margin = 12.dp)
+                        top.linkTo(movieTitleRef.bottom, margin = 8.dp)
+                        bottom.linkTo(parent.bottom)
+                        height = Dimension.wrapContent
+                        width = Dimension.fillToConstraints
+                    }, horizontalItemSpacing = 6.dp, verticalArrangement = Arrangement.spacedBy(8.dp)){
                 items(movieInfo.genres) { genre ->
                     AssistChip(onClick = {}, label = {
                         Text(text = genre.name, style = TextStyle(fontSize = 12.sp))
@@ -205,8 +210,8 @@ private fun MovieDescriptionContent(modifier: Modifier = Modifier, description: 
 
 @Composable
 private fun MovieRatingContent(modifier: Modifier = Modifier, voteAverage: Double, vote: Int) {
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Row {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = voteAverage.toString(),
                 textAlign = TextAlign.Center,
@@ -216,6 +221,8 @@ private fun MovieRatingContent(modifier: Modifier = Modifier, voteAverage: Doubl
                     fontSize = 12.sp
                 )
             )
+
+            Image(painter = painterResource(id = R.drawable.ic_rate), contentDescription = "rate")
         }
         Text(
             text = "$vote votes",
@@ -227,15 +234,16 @@ private fun MovieRatingContent(modifier: Modifier = Modifier, voteAverage: Doubl
 
 @Composable
 private fun MovieLanguageContent(modifier: Modifier = Modifier, language: String) {
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Row {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {
+            Image(painter = painterResource(id = R.drawable.ic_language), contentDescription = "langyage")
             Text(
                 text = language,
                 textAlign = TextAlign.Center,
                 style = TextStyle(
                     color = Color.Black,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 12.sp
+                    fontSize = 14.sp
                 )
             )
         }
@@ -249,8 +257,9 @@ private fun MovieLanguageContent(modifier: Modifier = Modifier, language: String
 
 @Composable
 private fun MovieReleaseContent(modifier: Modifier = Modifier, date: String) {
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Row {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {
+            Image(painter = painterResource(id = R.drawable.ic_release_date), contentDescription = "release_date")
             Text(
                 text = date,
                 textAlign = TextAlign.Center,
