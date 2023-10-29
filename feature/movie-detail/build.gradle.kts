@@ -28,6 +28,8 @@ dependencies {
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.feature.compose)
     testImplementation(project(":core:testing"))
+    androidTestImplementation(project(":core:testing"))
     kapt(libs.hilt.compiler)
     kapt(libs.hilt.ext.compiler)
+    androidTestImplementation(libs.androidx.navigation.testing)
 }
