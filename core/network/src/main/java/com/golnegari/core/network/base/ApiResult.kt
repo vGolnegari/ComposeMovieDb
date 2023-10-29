@@ -9,12 +9,12 @@ sealed class ApiResult<out T : BaseJson> {
 
     class Success<out T : BaseJson> (val data: T) : ApiResult<T>()
 
-    object NetworkError : ApiResult<Nothing>()
+    class Error(val errorType : ErrorType) : ApiResult<Nothing>()
 
-    object LocalNetworkError : ApiResult<Nothing>()
+}
 
-    object NetworkUnknownError : ApiResult<Nothing>()
-
+enum class ErrorType{
+    NO_INTERNET_CONNECTION , GENERIC_NETWORK_ERROR,Unknown,
 }
 
 suspend fun <T : BaseJson> (suspend () -> T).getApiResult(
@@ -31,13 +31,13 @@ suspend fun <T : BaseJson> (suspend () -> T).getApiResult(
         when (throwable) {
 
             is IOException, is HttpException ->
-                ApiResult.NetworkError
+                ApiResult.Error(errorType = ErrorType.GENERIC_NETWORK_ERROR)
 
             is NetworkConnectionException ->
-                ApiResult.LocalNetworkError
+                ApiResult.Error(errorType = ErrorType.NO_INTERNET_CONNECTION)
 
             else -> {
-                ApiResult.NetworkUnknownError
+                ApiResult.Error(errorType = ErrorType.Unknown)
             }
         }
     }

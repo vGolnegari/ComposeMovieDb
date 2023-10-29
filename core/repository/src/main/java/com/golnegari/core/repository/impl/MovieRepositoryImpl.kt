@@ -10,6 +10,7 @@ import com.golnegari.core.domain.model.Movie
 import com.golnegari.core.domain.model.MovieDetail
 import com.golnegari.core.domain.repository.MovieRepository
 import com.golnegari.core.network.base.ApiResult
+import com.golnegari.core.network.base.ErrorType
 import com.golnegari.core.network.datasource.RemoteMovieDataSource
 import com.golnegari.core.repository.paging.MoviePagingSource
 import com.golnegari.core.repository.toDomainModel
@@ -22,11 +23,25 @@ class MovieRepositoryImpl @Inject constructor(private val remoteMovieDataSource:
     MovieRepository {
 
     override suspend fun getMovieDetail(movieId: Int): DataResult<MovieDetail> {
-        val movieDetailResult = remoteMovieDataSource.fetchMovieDetail(movieId)
-        return if (movieDetailResult is ApiResult.Success) {
-            DataResult.Success(movieDetailResult.data.toDomainModel())
-        } else {
-            DataResult.Error(type = DataResultErrorType.NETWORK_GENERIC_ERROR)
+        return when (val movieDetailResult = remoteMovieDataSource.fetchMovieDetail(movieId)) {
+            is ApiResult.Success -> {
+                DataResult.Success(movieDetailResult.data.toDomainModel())
+            }
+
+            is ApiResult.Error -> {
+                when (movieDetailResult.errorType) {
+                    ErrorType.GENERIC_NETWORK_ERROR -> {
+                        DataResult.Error(type = DataResultErrorType.NETWORK_GENERIC_ERROR)
+                    }
+
+                    ErrorType.NO_INTERNET_CONNECTION -> {
+                        DataResult.Error(type = DataResultErrorType.INTERNET_CONNECTION_FAILED)
+                    }
+                    else -> {
+                        DataResult.Error(type = DataResultErrorType.Unknown)
+                    }
+                }
+            }
         }
     }
 

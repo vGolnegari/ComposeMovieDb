@@ -40,8 +40,9 @@ fun <A : UiAction> DataResult.Error<*>.getUiState(
         DataResultErrorType.NETWORK_GENERIC_ERROR -> {
             UiState.ErrorMessage(
                 uiModel = uiModel,
-                message = "Bad Response",
+                message = "Network Request Failed",
                 retryAction = retryAction as A,
+                retriable = true
             )
         }
 
@@ -50,6 +51,16 @@ fun <A : UiAction> DataResult.Error<*>.getUiState(
                 uiModel = uiModel,
                 message = "Not Internet Connection",
                 retryAction = retryAction as A,
+                retriable = true
+            )
+        }
+
+        DataResultErrorType.Unknown -> {
+            UiState.ErrorMessage(
+                uiModel = uiModel,
+                message = "Unknown Error",
+                retryAction = retryAction as A,
+                retriable = true
             )
         }
     }

@@ -17,5 +17,5 @@ sealed class DataResult<DomainModel : BaseDomainModel> {
 }
 
 enum class DataResultErrorType {
-    NETWORK_GENERIC_ERROR, INTERNET_CONNECTION_FAILED,
+    NETWORK_GENERIC_ERROR, INTERNET_CONNECTION_FAILED,Unknown
 }
