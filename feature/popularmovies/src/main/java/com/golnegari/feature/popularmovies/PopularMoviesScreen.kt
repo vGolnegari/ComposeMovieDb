@@ -10,8 +10,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -22,6 +23,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,12 +37,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.golnegari.common.base.ui.CommonScreen
 import com.golnegari.core.domain.model.Movie
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PopularMoviesScreen(
     viewModel: PopularMoviesViewModel = hiltViewModel(),
@@ -69,14 +73,15 @@ fun PopularMoviesScreen(
             }, colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.DarkGray))
         }) { paddingValues ->
             data?.let {
+                val coroutineScope = rememberCoroutineScope()
                 val movies = data.pageableMovies.collectAsLazyPagingItems()
-                LazyVerticalStaggeredGrid(
+                LazyVerticalGrid(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues)
                         .padding(8.dp),
-                    columns = StaggeredGridCells.Fixed(count = 3),
-                    verticalItemSpacing = 4.dp,
+                    columns = GridCells.Fixed(count = 3),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     items(movies.itemCount) { index ->
@@ -90,6 +95,39 @@ fun PopularMoviesScreen(
                             })
                         }
                     }
+                        when(movies.loadState.refresh) {
+                            is LoadState.Loading -> {
+                                items(20) {
+                                    LoadingScreen()
+                                }
+                            }
+
+                            is LoadState.Error -> {
+                                coroutineScope.launch {
+                                    snackBarHostState.showSnackbar("Ops! Something was Wrong",actionLabel = null)
+                                }
+                            }
+
+                            else -> {
+                            }
+                        }
+
+                        when(movies.loadState.append) {
+                            is LoadState.Loading -> {
+                                items(8) {
+                                    LoadingScreen(modifier = Modifier.height(200.dp))
+                                }
+                            }
+
+                            is LoadState.Error -> {
+                                coroutineScope.launch {
+                                    snackBarHostState.showSnackbar("Ops! Something was Wrong",actionLabel = null)
+                                }
+                            }
+
+                            else -> {}
+                        }
+
                 }
             }
         }
@@ -128,5 +166,12 @@ private fun MovieItemContent(
             maxLines = 2,
             textAlign = TextAlign.Center
         )
+    }
+}
+
+@Composable
+private fun LoadingScreen(modifier: Modifier = Modifier){
+    Column(modifier = modifier.height(200.dp).background(color = Color.LightGray) , verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+        CircularProgressIndicator()
     }
 }

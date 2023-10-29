@@ -34,7 +34,6 @@ fun <T : Any, A : UiAction> CommonScreen(
     uiStateState: State<UiState<T>>,
     singleEventFlow: Flow<UiState<T>>,
     sendAction: ((retryAction: A) -> Unit)? = null,
-    reset: ((data: T?) -> Unit)? = null,
     content: @Composable (data: T?, snackBarHostState: SnackbarHostState) -> Unit,
 ) {
     val hostState = remember { SnackbarHostState() }
