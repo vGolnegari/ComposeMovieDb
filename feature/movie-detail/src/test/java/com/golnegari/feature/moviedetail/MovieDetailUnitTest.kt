@@ -4,6 +4,7 @@ import com.golnegari.common.base.UiState
 import com.golnegari.core.domain.base.DataResult
 import com.golnegari.core.domain.model.MovieDetail
 import com.golnegari.core.domain.usecase.GetMovieDetailsUseCase
+import com.golnegari.core.testing.data.fakeMovieDetailInfo
 import com.golnegari.core.testing.repository.FakeSucceedMovieRepository
 import com.golnegari.core.testing.rules.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -45,7 +46,7 @@ class MovieDetailUnitTest {
             }
         }
         assertEquals(useCaseFlowResult[0],DataResult.Loading<MovieDetail>())
-        assertEquals(useCaseFlowResult[1],DataResult.Success(movieRepository.fakeMovieDetailInfo))
+        assertEquals(useCaseFlowResult[1],DataResult.Success(fakeMovieDetailInfo))
         collectJob.cancel()
     }
 
@@ -64,7 +65,7 @@ class MovieDetailUnitTest {
     fun uiStateSuccessShouldBeEqualToMovieDetailInfo() = runTest {
         val collectJob = launch(UnconfinedTestDispatcher()) { movieDetailUiModel.uiStateFlow.collect() }
         movieDetailUiModel.reduceState(action = MovieDetailUiAction.LoadMovieDetail(movieId = 3))
-        assertEquals(movieRepository.fakeMovieDetailInfo, movieDetailUiModel.uiStateFlow.value.uiModel?.movieDetail)
+        assertEquals(fakeMovieDetailInfo, movieDetailUiModel.uiStateFlow.value.uiModel?.movieDetail)
         collectJob.cancel()
     }
 

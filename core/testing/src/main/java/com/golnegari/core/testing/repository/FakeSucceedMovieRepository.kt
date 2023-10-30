@@ -7,7 +7,10 @@ import com.golnegari.core.domain.model.Movie
 import com.golnegari.core.domain.model.MovieDetail
 import com.golnegari.core.domain.repository.MovieRepository
 import com.golnegari.core.testing.data.fakeMovieDetailInfo
+import com.golnegari.core.testing.data.fakePagingSource
+import com.golnegari.core.testing.data.fakePopularMovieList
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 
 class FakeSucceedMovieRepository : MovieRepository {
 
@@ -16,6 +19,6 @@ class FakeSucceedMovieRepository : MovieRepository {
     }
 
     override fun syncPopularMovies(): Flow<PagingData<Movie>> {
-        TODO("Not yet implemented")
+        return fakePagingSource
     }
 }

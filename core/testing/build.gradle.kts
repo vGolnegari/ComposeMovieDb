@@ -14,6 +14,7 @@ dependencies {
     implementation(project(":core:domain"))
     implementation(project(":core:repository"))
     implementation(platform(libs.compose.bom))
+    api(libs.androidx.navigation.testing)
     api(libs.hilt.android.testing)
     api(libs.hilt.android.testing)
     api(libs.junit)

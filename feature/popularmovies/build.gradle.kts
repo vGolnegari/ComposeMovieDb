@@ -16,11 +16,15 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.androidxComposeCompiler.get()
     }
+    defaultConfig {
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
 }
 
 dependencies {
     implementation(project(":core:domain"))
     implementation(project(":base"))
+    androidTestImplementation(project(":core:testing"))
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.feature.compose)
     implementation(libs.composePaging)

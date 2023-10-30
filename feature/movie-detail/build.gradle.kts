@@ -31,5 +31,4 @@ dependencies {
     androidTestImplementation(project(":core:testing"))
     kapt(libs.hilt.compiler)
     kapt(libs.hilt.ext.compiler)
-    androidTestImplementation(libs.androidx.navigation.testing)
 }
